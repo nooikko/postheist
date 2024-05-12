@@ -1,35 +1,17 @@
-import glob from 'fast-glob';
+import { NextUIProvider } from '@nextui-org/react';
+import React, { type PropsWithChildren } from 'react';
+import '../styles/tailwind.css';
 
-import { Providers } from '@/app/providers';
-import { Layout } from '@/components/Layout';
-
-import '@/styles/tailwind.css';
-import { type Metadata } from 'next';
-import { type Section } from '@/components/SectionProvider';
-
-export const metadata: Metadata = {
-  title: {
-    template: '%s - Protocol API Reference',
-    default: 'Protocol API Reference',
-  },
-};
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const pages = await glob('**/*.mdx', { cwd: 'src/app' });
-  const allSectionsEntries = (await Promise.all(
-    pages.map(async (filename) => [`/${filename.replace(/(^|\/)page\.mdx$/, '')}`, (await import(`./${filename}`)).sections]),
-  )) as Array<[string, Array<Section>]>;
-  const allSections = Object.fromEntries(allSectionsEntries);
-
+const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <html lang='en' className='h-full' suppressHydrationWarning>
-      <body className='flex min-h-full bg-white antialiased dark:bg-zinc-900'>
-        <Providers>
-          <div className='w-full'>
-            <Layout allSections={allSections}>{children}</Layout>
-          </div>
-        </Providers>
+    <html lang='en' className='dark' suppressHydrationWarning>
+      <body>
+        <NextUIProvider>
+          <div className='text-sm'>{children}</div>
+        </NextUIProvider>
       </body>
     </html>
   );
-}
+};
+
+export default Layout;

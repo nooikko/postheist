@@ -9,7 +9,197 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Character {
+  id             String          @id @default(cuid())
+  name           String
+  player         Player?         @relation(fields: [playerId], references: [id])
+  playerId       String?         @unique
+  timedEvents    TimedEvent[]
+  trainedSkills  TrainedSkill[]
+  completedBooks CompletedBook[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model CompletedBook {
+  id          String    @id @default(cuid())
+  bookId      String
+  book        Book      @relation(fields: [bookId], references: [id])
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id])
+  completedAt DateTime  @default(now())
+
+  @@index([characterId, bookId])
+}
+
+model Book {
+  id             String          @id @default(cuid())
+  name           String
+  description    String
+  hours          Int?
+  trainingLevel  TrainingLevel
+  type           BookType
+  feats          Feat[]
+  recipes        Recipe[]
+  trainingEvents TrainingEvent[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  completedBy    CompletedBook[]
+
+  @@index([name])
+}
+
+model Feat {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  isHomebrew  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bookId      String?
+  book        Book?    @relation(fields: [bookId], references: [id])
+
+  @@index([name])
+}
+
+model Recipe {
+  id          String     @id @default(cuid())
+  name        String
+  description String
+  ingredients String[]
+  type        RecipeType
+  bookId      String?
+  book        Book?      @relation(fields: [bookId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([name])
+}
+
+enum TrainingLevel {
+  Beginner
+  Intermediate
+  Expert
+}
+
+enum HarptosMonths {
+  Hammer
+  Alturiak
+  Ches
+  Tarsakh
+  Mirtul
+  Kythorn
+  Flamerule
+  Eleasis
+  Eleint
+  Marpenoth
+  Uktar
+  Nightal
+}
+
+enum TrainingType {
+  Practice
+  UnderskilledPractice
+  Reading
+  Apprenticeship
+}
+
+model Player {
+  id        String     @id @default(cuid())
+  name      String
+  email     String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  character Character?
+}
+
+model Rule {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([name])
+}
+
+model InGameDate {
+  id            String          @id @default(cuid())
+  month         HarptosMonths
+  day           Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  TimedEvent    TimedEvent[]
+  TrainingEvent TrainingEvent[]
+
+  @@index([month, day, createdAt])
+}
+
+model TimedEvent {
+  id           String     @id @default(cuid())
+  name         String
+  startDate    InGameDate @relation(fields: [inGameDateId], references: [id])
+  duration     Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  character    Character? @relation(fields: [characterId], references: [id])
+  characterId  String?
+  inGameDateId String
+  description  String
+}
+
+model TrainedSkill {
+  id          String        @id @default(cuid())
+  name        String
+  level       TrainingLevel
+  hours       Int
+  character   Character?    @relation(fields: [characterId], references: [id])
+  characterId String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model TrainingEvent {
+  id           String       @id @default(cuid())
+  type         TrainingType
+  duration     Int
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  description  String?
+  bookId       String?
+  book         Book?        @relation(fields: [bookId], references: [id])
+  inGameDate   InGameDate?  @relation(fields: [inGameDateId], references: [id])
+  inGameDateId String?
+}
+
+model TrainingMilestones {
+  id        String        @id @default(cuid())
+  name      TrainingLevel
+  hours     Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model TrainingMeta {
+  id         String       @id @default(cuid())
+  name       TrainingType
+  multiplier Float
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+enum BookType {
+  TrainingBook
+  RecipeBook
+}
+
+enum RecipeType {
+  Potion
+  Enchanting
+  Recipe
 }
