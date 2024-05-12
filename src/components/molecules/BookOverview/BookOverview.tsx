@@ -11,6 +11,7 @@ interface BookOverviewProps {
   hours: number;
   myHours?: number;
   trainingLevel: TrainingLevel;
+  active?: boolean;
 }
 
 export const BookOverview: React.FC<BookOverviewProps> = ({
@@ -21,9 +22,15 @@ export const BookOverview: React.FC<BookOverviewProps> = ({
   recipesCount = 0,
   featCount = 0,
   myHours = 0,
+  active = false,
 }) => {
   return (
-    <Card as={Link} href='/resources/books/1' className='group w-full cursor-pointer rounded-md border-2 border-transparent hover:border-secondary '>
+    <Card
+      as={Link}
+      href='/resources/books/1'
+      className='group w-full cursor-pointer rounded-md border-2 border-transparent hover:border-secondary data-[selected=true]:border-secondary '
+      data-selected={active}
+    >
       <CardHeader className='justify-between text-xl font-semibold '>
         <div className='group-hover:text-secondary'>{name}</div>
         <div>

@@ -99,5 +99,6 @@ module.exports = {
     'nginx/certs/',
     '.npmrc',
     'esbuild-why*.html',
+    '*.mjs',
   ],
 };

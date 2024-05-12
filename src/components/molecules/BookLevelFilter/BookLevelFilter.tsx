@@ -1,9 +1,11 @@
 'use client';
+import { BookContext } from '#atoms/BookContext';
 import { Autocomplete, AutocompleteItem } from '#atoms/NextUI';
 import { TrainingLevel } from '@prisma/client';
-import React from 'react';
+import React, { useContext } from 'react';
 
 export const BookLevelFilter: React.FC = () => {
+  const { setTrainingLevel, trainingLevel } = useContext(BookContext);
   return (
     <Autocomplete
       label='Training Level'
@@ -11,7 +13,9 @@ export const BookLevelFilter: React.FC = () => {
       size='sm'
       labelPlacement='outside'
       variant='bordered'
-      className='max-w-full sm:max-w-56'
+      value={trainingLevel}
+      onSelectionChange={(value) => setTrainingLevel(value as TrainingLevel)}
+      className='max-w-full md:max-w-56'
       inputProps={{
         classNames: {
           inputWrapper: 'data-[hover=true]:border-secondary group-data-[focus=true]:border-secondary',

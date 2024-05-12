@@ -27,6 +27,7 @@
       "#hooks/*": ["./hooks/*"],
       "#prisma": ["./prisma"],
       "#constants": ["./constants"],
+      "#actions/*": ["./actions/*"],
       "#types": ["./types"]
     }
   },
