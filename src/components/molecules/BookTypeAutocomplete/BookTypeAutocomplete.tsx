@@ -1,13 +1,15 @@
 'use client';
-import { BookContext } from '#atoms/BookContext';
 import { Autocomplete, AutocompleteItem } from '#atoms/NextUI';
 import { HumanReadableBookTypes } from '#constants';
 import type { BookType } from '@prisma/client';
-import React, { useContext } from 'react';
+import React from 'react';
 
-export const BookTypeFilter: React.FC = () => {
-  const { setType, type } = useContext(BookContext);
+interface BookTypeAutocompleteProps {
+  value: BookType | undefined;
+  onSelectionChange: (value: any) => void;
+}
 
+export const BookTypeAutocomplete: React.FC<BookTypeAutocompleteProps> = ({ value, onSelectionChange }) => {
   return (
     <Autocomplete
       label='Book Type'
@@ -16,8 +18,8 @@ export const BookTypeFilter: React.FC = () => {
       labelPlacement='outside'
       variant='bordered'
       className='max-w-full md:max-w-56'
-      onSelectionChange={(value) => setType(value as BookType)}
-      value={type}
+      onSelectionChange={(value) => onSelectionChange(value)}
+      value={value}
       inputProps={{
         classNames: {
           inputWrapper: 'data-[hover=true]:border-secondary group-data-[focus=true]:border-secondary',

@@ -1,7 +1,7 @@
 import { Button, Link } from '#atoms/NextUI';
 import { BookLevelFilter } from '#molecules/BookLevelFilter';
-import { BookTypeFilter } from '#molecules/BookTypeFilter';
 import { BookOverviewList } from '#organisms/BookOverviewList';
+import { BookTypeFilter } from '#organisms/BookTypeFilter';
 
 export default () => {
   return (

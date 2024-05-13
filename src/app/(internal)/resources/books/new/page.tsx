@@ -1,7 +1,6 @@
 import { Label } from '#atoms/Label';
 import { Input } from '#atoms/NextUI';
 import { BookLevelFilter } from '#molecules/BookLevelFilter';
-import { BookTypeFilter } from '#molecules/BookTypeFilter';
 
 export default () => {
   return (

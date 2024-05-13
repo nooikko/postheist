@@ -12,7 +12,7 @@ interface BookContextShape {
   setTrainingLevel: React.Dispatch<React.SetStateAction<TrainingLevel | undefined>>;
   type?: BookType;
   setType: React.Dispatch<React.SetStateAction<BookType | undefined>>;
-  filteredBooks: Book[];
+  filteredBooks?: Book[];
 }
 
 export const BookContext = createContext<BookContextShape>({
